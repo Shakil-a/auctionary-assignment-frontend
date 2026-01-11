@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div>
     <nav>
       <router-link to="/">Home</router-link>
@@ -6,9 +6,9 @@
     </nav>
     <router-view />
   </div>
-</template> -->
+</template>
 
-<template>
+<!-- <template>
   <div>
     <h2>Auctions</h2>
     <ItemsList :auctions="dummyAuctions" />
@@ -45,4 +45,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->
