@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import BidItemCard from '@/BidItemCard.vue';
+import BidItemCard from './BidItemCard.vue';
 
 export default {
   components: { BidItemCard },
