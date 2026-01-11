@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Question from './Question.vue'
+import Question from './views/components/Question.vue'
 
 export default {
   components: { Question },

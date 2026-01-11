@@ -2,23 +2,30 @@
   <div>
     <ItemCard
       v-for="item in items"
-      :key="item.id"
-      :title="item.title"
+      :key="item.item_id"
+      :name="item.name"
       :description="item.description"
-      :startingBid="item.startingBid"
-      :endDate="item.endDate"
-      :currentBid="item.currentBid"
+      :endDate="formatDate(item.end_date)"
+      :sellerName="`${item.first_name} ${item.last_name}`"
     />
   </div>
 </template>
 
 <script>
-import ItemCard from './ItemCard.vue';
+import ItemCard from './ItemCard.vue'
 
 export default {
   components: { ItemCard },
   props: {
-    items: { type: Array, default: () => [] }
+    items: {
+      type: Array,
+      default: () => []
+    }
+  },
+  methods: {
+    formatDate(timestamp) {
+      return new Date(timestamp).toLocaleDateString()
+    }
   }
 }
 </script>

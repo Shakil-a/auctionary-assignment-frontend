@@ -1,30 +1,28 @@
 <template>
   <div class="item-card">
-    <h3>{{ title }}</h3>
+    <h3>{{ name }}</h3>
     <p>{{ description }}</p>
-    <p>Starting bid: ${{ startingBid }}</p>
-    <p>End date: {{ endDate }}</p>
-    <p v-if="currentBid">Current bid: ${{ currentBid }}</p>
+    <p>Ends on: {{ endDate }}</p>
+    <p class="seller">Seller: {{ sellerName }}</p>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    title: { type: String, required: true },
+    name: { type: String, required: true },
     description: { type: String, required: true },
-    startingBid: { type: Number, required: true },
     endDate: { type: String, required: true },
-    currentBid: { type: Number, default: null }
+    sellerName: { type: String, default: "" }
   }
 }
 </script>
 
 <style scoped>
-.auction-card {
+.item-card {
   border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
 }
 </style>
