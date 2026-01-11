@@ -24,13 +24,15 @@
             return {
                 email: "",
                 password: "",
+                error: "",
                 submitted: false
             }
         },
         methods: {
             handleSubmit(e){
                 this.submitted = true;
-                const {email, password} = $this
+                this.error = "";
+                const {email, password} = this
 
                 if(!(email && password)){
                     return;
