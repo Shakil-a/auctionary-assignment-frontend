@@ -12,7 +12,7 @@
 
       <label>Starting Bid:</label>
       <input type="number" v-model.number="starting_bid" />
-      <div v-show="submitted && (starting_bid === null || starting_bid < 0)">
+      <div v-show="submitted && (starting_bid === null || starting_bid <= 0)">
         Must be a positive number
       </div>
 
@@ -22,11 +22,14 @@
 
       <br /><br />
       <button>Create</button>
+      <div v-if="error">{{ error }}</div>
     </form>
   </div>
 </template>
 
 <script>
+import { coreService } from '@/services/core.service'
+
 export default {
   data() {
     return {
@@ -35,22 +38,40 @@ export default {
       starting_bid: null,
       end_date: "",
       submitted: false,
+      error: ""
     };
   },
   computed: {
     validEndDate() {
       if (!this.end_date) return false;
       const end = new Date(this.end_date);
-      return end > new Date();
-    },
+      return end.getTime() > Date.now();
+    }
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       this.submitted = true;
-      if (!this.name || !this.description || this.starting_bid === null || !this.validEndDate)
-        return;
-      alert("Item form valid!");
-    },
-  },
+      this.error = "";
+
+      if (!this.name || !this.description || !this.starting_bid || !this.validEndDate) return;
+
+      const endTimestamp = new Date(this.end_date).getTime(); // Convert to Unix timestamp in ms
+
+      const itemData = {
+        name: this.name,
+        description: this.description,
+        starting_bid: this.starting_bid,
+        end_date: endTimestamp
+      };
+
+      try {
+        const newItem = await coreService.createItem(itemData);
+        // Redirect to the new item's details page
+        this.$router.push(`/item/${newItem.item_id}`);
+      } catch (err) {
+        this.error = err.message || err || "Failed to create item";
+      }
+    }
+  }
 };
 </script>

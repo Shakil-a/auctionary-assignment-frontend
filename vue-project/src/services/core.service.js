@@ -46,5 +46,16 @@ export const coreService = {
        },
       body: JSON.stringify(bidData)
     }).then(parseResponse)
+  },
+
+  createItem(itemData) {
+    return fetch(`${API_URL}/item`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': localStorage.getItem("session_token") // must be logged in
+      },
+      body: JSON.stringify(itemData)
+    }).then(parseResponse)
   }
 }

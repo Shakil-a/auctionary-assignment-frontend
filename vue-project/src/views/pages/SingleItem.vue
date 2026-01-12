@@ -7,7 +7,6 @@
       <h2>{{ item.name }}</h2>
       <p>{{ item.description }}</p>
       <p>Starting bid: ${{ item.starting_bid }}</p>
-      <p>Start date: {{ formatDate(item.start_date) }}</p>
       <p>End date: {{ formatDate(item.end_date) }}</p>
 
       <p v-if="item.current_bid">
