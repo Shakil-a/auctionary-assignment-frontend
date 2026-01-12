@@ -1,20 +1,29 @@
 <template>
-  <div class="item-card">
-    <h3>
-      <router-link :to="`/item/${itemId}`">
-        {{ name }}
-      </router-link>
-    </h3>
+  <div class="card h-100 shadow-sm">
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title text-primary">
+        <router-link
+          :to="`/item/${itemId}`"
+          class="text-decoration-none"
+        >
+          {{ name }}
+        </router-link>
+      </h5>
 
-    <p>{{ description }}</p>
-    <p>Ends on: {{ endDate }}</p>
+      <p class="card-text text-secondary flex-grow-1">
+        {{ description }}
+      </p>
 
-    <p class="seller">
-      Seller:
-      <router-link :to="`/profile/${sellerId}`">
-        {{ sellerName }}
-      </router-link>
-    </p>
+      <div class="mt-auto">
+        <p class="mb-1"><strong>Ends on:</strong> {{ endDate }}</p>
+        <p class="mb-0">
+          <strong>Seller:</strong>
+          <router-link :to="`/profile/${sellerId}`" class="link-secondary">
+            {{ sellerName }}
+          </router-link>
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,15 +41,7 @@ export default {
 </script>
 
 <style scoped>
-.item-card {
-  border: 1px solid #ccc;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-}
-
-.seller a {
-  color: #2c7be5;
-  text-decoration: none;
+.card-text {
+  min-height: 3rem;
 }
 </style>

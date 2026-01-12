@@ -1,16 +1,48 @@
 <template>
-  <nav class="nav">
-    <router-link to="/">Home</router-link>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
 
-    <span v-if="!isLoggedIn">
-      <router-link to="/login">Login</router-link>
-      <router-link to="/register">Register</router-link>
-    </span>
+      <router-link class="navbar-brand fw-bold" to="/">
+        Auctionary
+      </router-link>
 
-    <span v-else>
-      <router-link to="/create-item">Create Item</router-link>
-      <router-link to="/profile">Profile</router-link>
-    </span>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+        aria-controls="navbarContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto">
+
+          <template v-if="!isLoggedIn">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/login">Login</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/register">Register</router-link>
+            </li>
+          </template>
+
+          <template v-else>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/create-item">Create Item</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/profile">Profile</router-link>
+            </li>
+          </template>
+
+        </ul>
+      </div>
+
+    </div>
   </nav>
 </template>
 
@@ -25,4 +57,3 @@ export default {
   }
 }
 </script>
-

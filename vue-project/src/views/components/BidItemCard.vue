@@ -1,24 +1,21 @@
 <template>
-  <div class="bid-item-card">
-    <p>
-      <strong>{{ user }}</strong> bid ${{ amount }} on {{ date }}
-    </p>
+  <div class="card shadow-sm mb-2">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <strong class="text-primary">{{ user }}</strong>
+        <p class="mb-0 text-secondary">bid ${{ amount }}</p>
+      </div>
+      <small class="text-muted">{{ date }}</small>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    user: { type: String, required: true },      // full name
-    amount: { type: Number, required: true },    // bid amount
-    date: { type: String, required: true }       // formatted timestamp
+    user: { type: String, required: true },
+    amount: { type: Number, required: true },
+    date: { type: String, required: true }
   }
 }
 </script>
-
-<style scoped>
-.bid-item-card {
-  border-bottom: 1px solid #ddd;
-  padding: 5px 0;
-}
-</style>

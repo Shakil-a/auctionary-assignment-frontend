@@ -1,27 +1,92 @@
 <template>
-  <div>
-    <button @click="logout">Logout</button>
-    <p v-if="loading">Loading profile...</p>
-    <p v-if="error" class="error">{{ error }}</p>
+  <div class="container py-4">
 
-    <div v-if="profile">
-      <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
-
-      <h3>Selling</h3>
-      <ItemsList :items="profile.selling" />
-
-      <h3>Bidding On</h3>
-      <ItemsList :items="profile.bidding_on" />
-
-      <h3>Auctions Ended</h3>
-      <ItemsList :items="profile.auctions_ended" />
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-primary">
+        {{ profile?.first_name }} {{ profile?.last_name }}
+      </h2>
+      <button class="btn btn-secondary" @click="logout">
+        Logout
+      </button>
     </div>
+
+    <p v-if="loading" class="text-center text-secondary">Loading profile...</p>
+    <p v-if="error" class="alert alert-danger text-center">{{ error }}</p>
+
+    <div v-if="profile" class="">
+
+      <h3 class="text-primary mt-3">Selling</h3>
+      <div v-if="profile.selling.length > 0" class="row row-cols-1 row-cols-md-2 g-4">
+        <div v-for="item in profile.selling" :key="item.item_id" class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">
+                <router-link :to="`/item/${item.item_id}`" class="text-decoration-none">
+                  {{ item.name }}
+                </router-link>
+              </h5>
+              <p class="card-text text-secondary">
+                {{ item.description }}
+              </p>
+            </div>
+            <div class="card-footer bg-light text-muted">
+              Ends: {{ formatDate(item.end_date) }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-else class="text-secondary">No items currently being sold.</p>
+
+      <h3 class="text-primary mt-4">Bidding On</h3>
+      <div v-if="profile.bidding_on.length > 0" class="row row-cols-1 row-cols-md-2 g-4">
+        <div v-for="item in profile.bidding_on" :key="item.item_id" class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">
+                <router-link :to="`/item/${item.item_id}`" class="text-decoration-none">
+                  {{ item.name }}
+                </router-link>
+              </h5>
+              <p class="card-text text-secondary">
+                {{ item.description }}
+              </p>
+            </div>
+            <div class="card-footer bg-light text-muted">
+              Ends: {{ formatDate(item.end_date) }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-else class="text-secondary">Not bidding on any items right now.</p>
+
+      <h3 class="text-primary mt-4">Auctions Ended</h3>
+      <div v-if="profile.auctions_ended.length > 0" class="row row-cols-1 row-cols-md-2 g-4">
+        <div v-for="item in profile.auctions_ended" :key="item.item_id" class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">
+                <router-link :to="`/item/${item.item_id}`" class="text-decoration-none">
+                  {{ item.name }}
+                </router-link>
+              </h5>
+              <p class="card-text text-secondary">
+                {{ item.description }}
+              </p>
+            </div>
+            <div class="card-footer bg-light text-muted">
+              Ended on: {{ formatDate(item.end_date) }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-else class="text-secondary">No auction history yet.</p>
+    </div>
+
   </div>
 </template>
 
 <script>
-import { userService } from '@/services/user.service';
-import ItemsList from '../components/ItemsList.vue';
+import { userService } from '@/services/user.service'
 
 export default {
   data() {
@@ -30,9 +95,6 @@ export default {
       loading: true,
       error: ""
     }
-  },
-   components: {
-    ItemsList
   },
   computed: {
     profileUserId() {
@@ -50,17 +112,16 @@ export default {
       this.loading = true
       userService.getProfile(this.profileUserId)
         .then(data => this.profile = data)
-        .catch(err => this.error = err)
+        .catch(err => this.error = err.message || err || "")
         .finally(() => this.loading = false)
     },
-     logout() {
+    formatDate(timestamp) {
+      return new Date(timestamp).toLocaleDateString()
+    },
+    logout() {
       userService.logout()
-        .then(() => {
-          this.$router.push("/")
-        })
-        .catch(err => {
-          console.error(err)
-        })
+        .then(() => this.$router.push("/"))
+        .catch(err => console.error(err))
     }
   }
 }

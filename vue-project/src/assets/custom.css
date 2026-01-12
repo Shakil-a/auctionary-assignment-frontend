@@ -1,0 +1,44 @@
+:root {
+  --bs-primary: #4971E0;     /* Auctionary Primary */
+  --bs-secondary: #152B67;   /* Darker accent */
+  --bs-success: #FFD700;     /* Highlight / Bid Buttons */
+  --bs-info: #D1EAFF;        /* Light background */
+  --bs-light: #F8F9FA;       /* Page background */
+  --bs-dark: #2D2D2D;        /* Main text */
+  --text-secondary: #7F8C8D; /* Secondary text */
+}
+
+body {
+  background-color: var(--bs-light);
+  color: var(--bs-dark);
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.btn-success {
+  background-color: var(--bs-success);
+  border-color: var(--bs-success);
+  color: #2D2D2D;
+}
+
+.navbar {
+  background-color: var(--bs-primary);
+}
+
+.navbar .nav-link, .navbar .navbar-brand {
+  color: #fff;
+}
+
+.card {
+  border-radius: 0.5rem;
+  border-color: var(--bs-secondary);
+  background: white;
+}
+
+.text-highlight {
+  color: var(--bs-success);
+}

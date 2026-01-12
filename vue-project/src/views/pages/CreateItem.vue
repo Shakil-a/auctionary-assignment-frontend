@@ -1,29 +1,77 @@
 <template>
-  <div>
-    <h1>Create Item</h1>
-    <form @submit.prevent="handleSubmit">
-      <label>Name:</label>
-      <input type="text" v-model="name" />
-      <div v-show="submitted && !name">Name is required</div>
+  <div class="container py-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+      <div class="card-body">
+        <h2 class="text-center text-primary mb-4">Create New Item</h2>
 
-      <label>Description:</label>
-      <textarea v-model="description"></textarea>
-      <div v-show="submitted && !description">Description is required</div>
+        <form @submit.prevent="handleSubmit" novalidate>
 
-      <label>Starting Bid:</label>
-      <input type="number" v-model.number="starting_bid" />
-      <div v-show="submitted && (starting_bid === null || starting_bid <= 0)">
-        Must be a positive number
+          <div class="mb-3">
+            <label class="form-label">Item Name</label>
+            <input
+              type="text"
+              v-model="name"
+              class="form-control"
+              :class="{ 'is-invalid': submitted && !name }"
+              placeholder="Enter item title"
+            />
+            <div class="invalid-feedback">
+              Name is required
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea
+              v-model="description"
+              class="form-control"
+              rows="4"
+              :class="{ 'is-invalid': submitted && !description }"
+              placeholder="Enter a description"
+            ></textarea>
+            <div class="invalid-feedback">
+              Description is required
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Starting Bid</label>
+            <input
+              type="number"
+              v-model.number="starting_bid"
+              class="form-control"
+              :class="{ 'is-invalid': submitted && (starting_bid === null || starting_bid <= 0) }"
+              placeholder="Enter starting bid"
+            />
+            <div class="invalid-feedback">
+              Must be a positive number
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">End Date</label>
+            <input
+              type="date"
+              v-model="end_date"
+              class="form-control"
+              :class="{ 'is-invalid': submitted && !validEndDate }"
+            />
+            <div class="invalid-feedback">
+              End date must be in the future
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">
+            Create Item
+          </button>
+
+          <div v-if="error" class="alert alert-danger mt-3 text-center">
+            {{ error }}
+          </div>
+
+        </form>
       </div>
-
-      <label>End Date:</label>
-      <input type="date" v-model="end_date" />
-      <div v-show="submitted && !validEndDate">End date must be in the future</div>
-
-      <br /><br />
-      <button>Create</button>
-      <div v-if="error">{{ error }}</div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -44,8 +92,8 @@ export default {
   computed: {
     validEndDate() {
       if (!this.end_date) return false;
-      const end = new Date(this.end_date);
-      return end.getTime() > Date.now();
+      const end = new Date(this.end_date).getTime();
+      return end > Date.now();
     }
   },
   methods: {
@@ -55,18 +103,15 @@ export default {
 
       if (!this.name || !this.description || !this.starting_bid || !this.validEndDate) return;
 
-      const endTimestamp = new Date(this.end_date).getTime(); // Convert to Unix timestamp in ms
-
       const itemData = {
         name: this.name,
         description: this.description,
         starting_bid: this.starting_bid,
-        end_date: endTimestamp
+        end_date: new Date(this.end_date).getTime()
       };
 
       try {
         const newItem = await coreService.createItem(itemData);
-        // Redirect to the new item's details page
         this.$router.push(`/item/${newItem.item_id}`);
       } catch (err) {
         this.error = err.message || err || "Failed to create item";
