@@ -18,7 +18,8 @@
 </template>
 
 <script>
-    import EmailValidator from 'email-validator'
+    import { userService } from '@/services/user.service';
+import EmailValidator from 'email-validator'
     export default {
         data(){
             return {
@@ -43,13 +44,15 @@
                     return;
                 }
 
-                const password_pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])(?=.*[a-z]).{8,32}$/
-                if(!(password_pattern.test(password))){
-                    this.error = "Password not strong enough"
-                    return;
-                }
-
-                alert("button clicked");
+                userService.login(email, password)
+                .then(result => {
+                    console.log("Auth success")
+                    this.$router.push("/")
+                })
+                .catch(error => {
+                    this.error = error
+                    this.submitted = false
+                })
             }
         }
     }

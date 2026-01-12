@@ -52,7 +52,10 @@ export default {
       // Check all fields
       if (!(this.first_name && this.last_name && this.email && this.password)) return
       if (!EmailValidator.validate(this.email)) return
-      if (!this.passwordPattern.test(this.password)) return
+      if(!(password_pattern.test(password))){
+          this.error = "Password not strong enough"
+          return;
+      }
 
       alert("Form is valid! Ready to submit")
     }
