@@ -1,37 +1,50 @@
 const API_URL = 'http://localhost:3333'
 
-function handleResponse(res) {
-  if (!res.ok) {
-    return res.json().then(err => Promise.reject(err))
+async function parseResponse(response) {
+  const contentType = response.headers.get("content-type")
+
+  let data
+  if (contentType && contentType.includes("application/json")) {
+    data = await response.json()
+  } else {
+    data = await response.text()
   }
-  return res.json()
+
+  if (!response.ok) {
+    throw data
+  }
+
+  return data
 }
 
 export const coreService = {
   // Items
   searchItems() {
     return fetch(`${API_URL}/search`)
-      .then(handleResponse)
+      .then(parseResponse)
   },
 
   //single item
   getItem(itemId) {
     return fetch(`${API_URL}/item/${itemId}`)
-      .then(handleResponse)
+      .then(parseResponse)
   },
 
   // Bids on an item
   getBids(itemId) {
     return fetch(`${API_URL}/item/${itemId}/bid`)
-      .then(handleResponse)
+      .then(parseResponse)
   },
 
   //place bid on an item
   placeBid(itemId, bidData) {
     return fetch(`${API_URL}/item/${itemId}/bid`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Authorization': localStorage.getItem("session_token")
+       },
       body: JSON.stringify(bidData)
-    }).then(handleResponse)
+    }).then(parseResponse)
   }
 }

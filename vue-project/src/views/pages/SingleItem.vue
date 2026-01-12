@@ -22,12 +22,12 @@
       <!-- Bid Section -->
       <h3>Bids</h3>
       <BidItemList :bids="bids" />
-      <BidItemForm v-if="isLoggedIn" :currentBid="item.current_bid" @bidPlaced="refreshBids" />
+      <BidItemForm v-if="isLoggedIn" :itemId="item.item_id" :currentBid="item.current_bid" @bidPlaced="refreshBids" />
 
       <!-- Questions Section -->
       <h3>Questions</h3>
       <QuestionList :questions="questions" />
-      <AskQuestionForm v-if="isLoggedIn" @questionAsked="refreshQuestions" />
+      <AskQuestionForm v-if="isLoggedIn" :itemId="item.item_id" @questionAsked="refreshQuestions" />
     </div>
   </div>
 </template>
