@@ -13,7 +13,7 @@
       <label>Email:</label>
       <input type="email" v-model="email"/>
       <div v-show="submitted && !email">Email is required</div>
-      <div v-show="submitted && email && !EmailValidator.validate(email)">Invalid email</div>
+      <div v-show="submitted && email && !isEmailValid">Invalid email</div>
 
       <label>Password:</label>
       <input type="password" v-model="password"/>
@@ -31,6 +31,7 @@
 
 <script>
 import EmailValidator from 'email-validator'
+import { userService } from '@/services/user.service'
 
 export default {
   data() {
@@ -44,20 +45,39 @@ export default {
       passwordPattern: /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])(?=.*[a-z]).{8,32}$/
     }
   },
+  computed: {
+    isEmailValid() {
+      return EmailValidator.validate(this.email)
+    }
+  },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       this.submitted = true
       this.error = ""
 
-      // Check all fields
+      // Basic validation
       if (!(this.first_name && this.last_name && this.email && this.password)) return
-      if (!EmailValidator.validate(this.email)) return
-      if(!(password_pattern.test(password))){
-          this.error = "Password not strong enough"
-          return;
-      }
+      if (!this.isEmailValid) return
+      if (!this.passwordPattern.test(this.password)) return
 
-      alert("Form is valid! Ready to submit")
+      try {
+        // Call register
+        await userService.register({
+          first_name: this.first_name,
+          last_name: this.last_name,
+          email: this.email,
+          password: this.password
+        })
+
+        // Immediately log in
+        await userService.login(this.email, this.password)
+
+        // Redirect to home
+        this.$router.push("/")
+
+      } catch (err) {
+        this.error = err.message || err || "Registration failed"
+      }
     }
   }
 }
