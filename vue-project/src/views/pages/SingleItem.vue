@@ -25,7 +25,12 @@
 
       <!-- Questions Section -->
       <h3>Questions</h3>
-      <QuestionList :questions="questions" />
+      <QuestionList 
+          :questions="questions" 
+          :currentUserId="currentUserId" 
+          :itemOwnerId="item?.creator_id"
+          @answered="refreshQuestions" 
+      />
       <AskQuestionForm v-if="isLoggedIn" :itemId="item.item_id" @questionAsked="refreshQuestions" />
     </div>
   </div>
@@ -54,7 +59,10 @@ export default {
   computed: {
     isLoggedIn() {
       return !!authState.sessionToken
-    }
+    },
+    currentUserId() {
+    return Number(localStorage.getItem('user_id'))
+  }
   },
   mounted() {
     const id = Number(this.$route.params.id)
