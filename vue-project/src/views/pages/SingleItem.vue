@@ -11,57 +11,84 @@
       <p>End date: {{ formatDate(item.end_date) }}</p>
 
       <p v-if="item.current_bid">
-        Current bid: ${{ item.current_bid ?? 'N/A' }}
+        Current bid: ${{ item.current_bid }}
         <span v-if="item.current_bid_holder">
-            by {{ item.current_bid_holder?.first_name }} {{ item.current_bid_holder?.last_name }}
+          by {{ item.current_bid_holder.first_name }} {{ item.current_bid_holder.last_name }}
         </span>
-</p>
+      </p>
 
       <p>Seller: {{ item.first_name }} {{ item.last_name }}</p>
+
+      <!-- Bid Section -->
+      <h3>Bids</h3>
+      <BidItemList :bids="bids" />
+      <BidItemForm v-if="isLoggedIn" :currentBid="item.current_bid" @bidPlaced="refreshBids" />
+
+      <!-- Questions Section -->
+      <h3>Questions</h3>
+      <QuestionList :questions="questions" />
+      <AskQuestionForm v-if="isLoggedIn" @questionAsked="refreshQuestions" />
     </div>
   </div>
 </template>
 
 <script>
+import { authState } from '@/services/user.service'
 import { coreService } from '@/services/core.service'
+import { questionService } from '@/services/questions.service'
+import BidItemList from '../components/BidItemList.vue'
+import BidItemForm from '../components/BidItemForm.vue'
+import QuestionList from '../components/QuestionList.vue'
+import AskQuestionForm from '../components/AskQuestionForm.vue'
 
 export default {
+  components: { BidItemList, BidItemForm, QuestionList, AskQuestionForm },
   data() {
     return {
       item: null,
+      bids: [],
+      questions: [],
       loading: true,
-      error: ""
+      error: "",
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return !!authState.sessionToken
     }
   },
   mounted() {
-    this.loading = true
     const id = Number(this.$route.params.id)
-    coreService.getItem(id)
-      .then(item => {
-        this.item = item
-        this.loading = false
-      })
-      .catch(err => {
-        this.error = err.message || "Failed to load item"
-        this.loading = false
-      })
+    this.loadItem(id)
+    this.loadBids(id)
+    this.loadQuestions(id)
   },
   methods: {
     formatDate(timestamp) {
       return new Date(timestamp).toLocaleString()
+    },
+    loadItem(id) {
+      coreService.getItem(id)
+        .then(item => this.item = item)
+        .catch(err => this.error = err.message || "Failed to load item")
+        .finally(() => this.loading = false)
+    },
+    loadBids(id) {
+      coreService.getBids(id)
+        .then(bids => this.bids = bids)
+        .catch(err => console.error(err))
+    },
+    loadQuestions(id) {
+      questionService.getQuestions(id)
+        .then(questions => this.questions = questions,)
+        .catch(err => console.error(err))
+    },
+    refreshBids() {
+      this.loadBids(this.$route.params.id)
+    },
+    refreshQuestions() {
+      this.loadQuestions(this.$route.params.id)
     }
   }
 }
 </script>
-
-<style scoped>
-.single-item {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 6px;
-  margin: 10px 0;
-}
-.error {
-  color: red;
-}
-</style>

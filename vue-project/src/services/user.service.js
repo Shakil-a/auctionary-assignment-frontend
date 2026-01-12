@@ -1,4 +1,5 @@
 const API_URL = 'http://localhost:3333'
+import { reactive } from 'vue'
 
 async function parseResponse(response) {
   const contentType = response.headers.get("content-type")
@@ -17,6 +18,11 @@ async function parseResponse(response) {
   return data
 }
 
+export const authState = reactive({
+  sessionToken: localStorage.getItem('session_token') || null
+})
+
+
 export const userService = {
   login(email, password) {
     return fetch(`${API_URL}/login`, {
@@ -28,6 +34,7 @@ export const userService = {
     .then(data => {
       localStorage.setItem("user_id", data.user_id)
       localStorage.setItem("session_token", data.session_token)
+      authState.sessionToken = data.session_token // update reactive state
       return data
     })
   },
@@ -41,29 +48,18 @@ export const userService = {
     .then(parseResponse)
   },
 
-  logout(){
+  logout() {
     return fetch(`${API_URL}/logout`, {
       method: 'POST',
-      headers: { 
-                'Content-Type': 'application/json',
-                'X-Authorization': localStorage.getItem("session_token")
-              },
-      body: JSON.stringify(userData)
-    })
-    .then((response) => {
-      if(response.status === 200){
-        localStorage.removeItem("user_id")
-        localStorage.removeItem("session_token")
-        return
-      } else if(response.status === 401){
-        throw "Not logged in"
-      } else {
-        throw "Something went wrong"
+      headers: {
+        'X-Authorization': localStorage.getItem("session_token")
       }
     })
-    .catch((error) => {
-      console.log("Err", error)
-      return Promise.reject(error)
+    .then(parseResponse)
+    .then(() => {
+      localStorage.removeItem("user_id")
+      localStorage.removeItem("session_token")
+      authState.sessionToken = null
     })
   }
 }

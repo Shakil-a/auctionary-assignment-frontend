@@ -2,17 +2,16 @@
   <div>
     <Question
       v-for="q in questions"
-      :key="q.id"
-      :user="q.user"
-      :question="q.question"
-      :answer="q.answer"
+      :key="q.question_id"
+      :question="q.question_text"
+      :answer="q.answer_text"
     />
     <p v-if="questions.length === 0">No questions yet.</p>
   </div>
 </template>
 
 <script>
-import Question from './views/components/Question.vue'
+import Question from '../components/Question.vue'
 
 export default {
   components: { Question },
