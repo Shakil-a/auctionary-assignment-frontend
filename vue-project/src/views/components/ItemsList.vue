@@ -1,13 +1,15 @@
 <template>
   <div>
-    <router-link v-for="item in items" :key="item.item_id" :to="`/item/${item.item_id}`">
-      <ItemCard
+    <ItemCard
+      v-for="item in items"
+      :key="item.item_id"
+      :itemId="item.item_id"
       :name="item.name"
       :description="item.description"
       :endDate="formatDate(item.end_date)"
+      :sellerId="item.creator_id"
       :sellerName="`${item.first_name} ${item.last_name}`"
-      />
-    </router-link>
+    />
   </div>
 </template>
 

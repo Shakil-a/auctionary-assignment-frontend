@@ -9,29 +9,18 @@
 
     <span v-else>
       <router-link to="/create-item">Create Item</router-link>
-      <button @click="logout">Logout</button>
+      <router-link to="/profile">Profile</router-link>
     </span>
   </nav>
 </template>
 
 <script>
-import { userService, authState } from '@/services/user.service'
+import { authState } from '@/services/user.service'
 
 export default {
   computed: {
     isLoggedIn() {
       return !!authState.sessionToken
-    }
-  },
-  methods: {
-    logout() {
-      userService.logout()
-        .then(() => {
-          this.$router.push("/login")
-        })
-        .catch(err => {
-          console.error(err)
-        })
     }
   }
 }

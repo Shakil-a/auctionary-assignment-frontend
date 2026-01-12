@@ -22,7 +22,17 @@ const routes = [
     { path: "/register", component: Register},
     { path: "/item/:id", component: SingleItem},
     { path: "/create-item", component: CreateItem, beforeEnter: ifAuthenticated},
-    { path: "/profile", component: Profile, beforeEnter: ifAuthenticated}
+    {
+        path: '/profile',
+        name: 'MyProfile',
+        component: Profile,
+        beforeEnter: ifAuthenticated
+    },
+    {
+        path: '/profile/:id',
+        name: 'UserProfile',
+        component: Profile
+    }
 ]
 
 const router = createRouter({

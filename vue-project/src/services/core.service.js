@@ -18,11 +18,30 @@ async function parseResponse(response) {
 }
 
 export const coreService = {
-  // Items
-  searchItems() {
-    return fetch(`${API_URL}/search`)
-      .then(parseResponse)
-  },
+ searchItems(params = {}) {
+  const query = new URLSearchParams();
+
+  // Always include q (even empty)
+  query.append('q', params.q ?? '');
+
+  // Include status if set
+  if (params.status) query.append('status', params.status);
+
+  // Pagination
+  query.append('limit', params.limit ?? 20);
+  query.append('offset', params.offset ?? 0);
+
+  // Token header (used automatically for OPEN, ARCHIVE, BID)
+  const token = localStorage.getItem("session_token");
+
+  return fetch(`${API_URL}/search?${query.toString()}`, {
+    headers: {
+      ...(token ? { 'X-Authorization': token } : {}),
+    },
+  }).then(parseResponse);
+},
+
+
 
   //single item
   getItem(itemId) {

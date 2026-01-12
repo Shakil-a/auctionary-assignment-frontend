@@ -61,5 +61,10 @@ export const userService = {
       localStorage.removeItem("session_token")
       authState.sessionToken = null
     })
+  },
+
+  getProfile(userId) {
+    return fetch(`${API_URL}/users/${userId}`)
+      .then(parseResponse)
   }
 }
