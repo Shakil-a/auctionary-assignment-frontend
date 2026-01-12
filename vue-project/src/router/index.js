@@ -4,6 +4,8 @@ import Home from "../views/pages/Home.vue"
 import Login from "../views/pages/Login.vue";
 import Register from "../views/pages/Register.vue"
 import SingleItem from "../views/pages/SingleItem.vue"
+import CreateItem from "../views/pages/CreateItem.vue";
+import Profile from "../views/pages/Profile.vue";
 
 const ifAuthenticated = (to, from, next) => {
     const loggedIn = localStorage.getItem('session_token');
@@ -18,7 +20,9 @@ const routes = [
     { path: "/", component: Home},
     { path: "/login", component: Login},
     { path: "/register", component: Register},
-    { path: "/item/:id", component: SingleItem, beforeEnter: ifAuthenticated}
+    { path: "/item/:id", component: SingleItem},
+    { path: "/create-item", component: CreateItem, beforeEnter: ifAuthenticated},
+    { path: "/profile", component: Profile, beforeEnter: ifAuthenticated}
 ]
 
 const router = createRouter({
